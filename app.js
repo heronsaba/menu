@@ -72,22 +72,22 @@ const menu = [
     img: "./images/item-9.jpeg",
     desc: `skateboard fam synth authentic semiotics. Live-edge lyft af, edison bulb yuccie crucifix microdosing.`,
   },
+  {
+    id: 10,
+    title: "Feijão Tropeiro",
+    category: "Brazilian Food",
+    price: 23.99,
+    img: "./images/item-11.jpeg",
+    desc: `skateboard fam synth authentic semiotics. Live-edge lyft af, edison bulb yuccie crucifix microdosing.`,
+  },
 ];
 const sectionCenter = document.querySelector(".section-center");
-const filterBtn = document.querySelectorAll(".filter-btn");
-//converting nodelist to array
-let btns = Array.prototype.slice.call(filterBtn);
-
-//adding event listener for every menu button
-for (let btn of btns) {
-  btn.addEventListener("click", function (e) {
-    arrayFilt(e.currentTarget.dataset.id, menu);
-  })
-}
+const container = document.querySelector(".btn-container");
 //load main page
 loadContent = (menuItems) => {
-  let displayMenu = menuItems.map(function (item) {
-    return ` <article class="menu-item">
+  categoryBtn();
+  let displayMenu = menuItems.map((item) =>
+  ` <article class="menu-item">
         <img src=${item.img} class="photo" alt=${item.title}>
         <div class="item-info">
             <header>
@@ -97,12 +97,9 @@ loadContent = (menuItems) => {
             <p class="item-text">${item.desc}</p>
         </div>
     </article>`
-  });
-  displayMenu = displayMenu.join("");
+  ).join("");
   sectionCenter.innerHTML = displayMenu;
 }
-
-
 //filtering array and loading content by category
 arrayFilt = (category, menuItems) => {
   if (category === "all") {
@@ -115,6 +112,33 @@ arrayFilt = (category, menuItems) => {
     loadContent(categoryArray);
   }
 }
+//setting dynamic buttons
+categoryBtn = () => {
+  const categories = menu.reduce(
+    (values, item) => {
+      if (!values.includes(item.category)) {
+        values.push(item.category);
+      }
+      return values;
+    },
+    ["all"]
+  );
+  const categoryBtn = categories.map(
+    (category) => `<button class="filter-btn" type="button" data-id=${category}>${category}</button>`
+  ).join("");
+  container.innerHTML = categoryBtn;
+  //selecting the new dynamic buttons
+const filterBtn = document.querySelectorAll(".filter-btn");
+//converting nodelist to array
+let btns = Array.prototype.slice.call(filterBtn);
 
+//adding event listener for every menu button
+for (let btn of btns) {
+  btn.addEventListener("click", function (e) {
+    arrayFilt(e.currentTarget.dataset.id, menu);
+  })
+}
+
+}
 //loading content on the first access.
 window.addEventListener("DOMContentLoaded", loadContent(menu));
